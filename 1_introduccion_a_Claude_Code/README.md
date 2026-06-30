@@ -24,17 +24,10 @@
 
 > Los nombres exactos cambian un poco según el mecanismo, pero todos se reducen a estos niveles. En MCP se eligen con la bandera `--scope`.
 
-- **Local** — Solo tú, solo en el proyecto actual. La configuración se guarda **fuera del repo** (por ejemplo, MCP la guarda en `~/.claude.json` bajo la ruta de ese proyecto). **No se comparte por git.** ❌
-- **Project / Compartido con el equipo** — Para el proyecto actual y compartido con todo el equipo. La configuración vive en archivos **dentro del repo** (`CLAUDE.md`, `.claude/...`, `.mcp.json`) y **sí se commitea.** ✅
-- **User (antes "global")** — Solo tú, pero en **todos tus proyectos** de la máquina. Vive en tu home (`~/.claude/...` o `~/.claude.json`). **No se comparte por git.** ❌
-- **Managed policy / Organización** — Lo despliega IT/DevOps para toda la organización; se carga antes que todo lo demás y no se puede excluir. Se distribuye por MDM/Group Policy, **no por git.** ❌
-
-**Correcciones a la idea inicial (que tenía errores):**
-
-- ❌ *"local: sí se puede hacer commit para compartir con el equipo"* → **Falso.** El scope que se commitea y se comparte es **project**, no **local**. El scope **local** es privado y se guarda fuera del repo.
-- ✅ *"local: solo tú en ese proyecto"* → Correcto, esa es la definición de **local**.
-- ✅ *"compartido entre el equipo: solo de un proyecto específico"* → Correcto, eso es el scope **project**.
-- ⚠️ *"global: no se puede commitear, sirve para todos los proyectos"* → La idea es correcta, pero el nombre actual es **user**. En versiones antiguas de MCP este scope se llamaba "global", y el actual "local" se llamaba "project"; de ahí viene buena parte de la confusión.
+- **Local** — Solo tú, solo en el proyecto actual. La configuración se guarda **fuera del repo** (por ejemplo, MCP la guarda en `~/.claude.json` bajo la ruta de ese proyecto). **No se comparte por git.**
+- **Project / Compartido con el equipo** — Para el proyecto actual y compartido con todo el equipo. La configuración vive en archivos **dentro del repo** (`CLAUDE.md`, `.claude/...`, `.mcp.json`) y **sí se commitea.**
+- **User (antes "global")** — Solo tú, pero en **todos tus proyectos** de la máquina. Vive en tu home (`~/.claude/...` o `~/.claude.json`). **No se comparte por git.**
+- **Managed policy / Organización** — Lo despliega IT/DevOps para toda la organización; se carga antes que todo lo demás y no se puede excluir. Se distribuye por MDM/Group Policy, **no por git.**
 
 ## Scope de Claude md
 
