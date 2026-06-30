@@ -13,9 +13,74 @@
 
 # Scope
 
+**Scope** (alcance) es el **nivel desde el que se carga y se aplica una configuración** en Claude Code. No describe *qué* hace un mecanismo, sino *desde dónde rige*. Cada scope responde a dos preguntas:
+
+1. **¿En qué proyectos está disponible?** → solo el proyecto actual, o todos los proyectos de tu máquina.
+2. **¿Se comparte con el equipo?** → se versiona en el repo (visible para el equipo) o queda privado para ti.
+
+> Estas definiciones de scope son transversales: son el eje común que organiza CLAUDE.md, las skills, los MCP y las rules. Por eso van aquí, **fuera de las tablas** de cada mecanismo.
+
+## Tipos de scope
+
+> Los nombres exactos cambian un poco según el mecanismo, pero todos se reducen a estos niveles. En MCP se eligen con la bandera `--scope`.
+
+- **Local** — Solo tú, solo en el proyecto actual. La configuración se guarda **fuera del repo** (por ejemplo, MCP la guarda en `~/.claude.json` bajo la ruta de ese proyecto). **No se comparte por git.** ❌
+- **Project / Compartido con el equipo** — Para el proyecto actual y compartido con todo el equipo. La configuración vive en archivos **dentro del repo** (`CLAUDE.md`, `.claude/...`, `.mcp.json`) y **sí se commitea.** ✅
+- **User (antes "global")** — Solo tú, pero en **todos tus proyectos** de la máquina. Vive en tu home (`~/.claude/...` o `~/.claude.json`). **No se comparte por git.** ❌
+- **Managed policy / Organización** — Lo despliega IT/DevOps para toda la organización; se carga antes que todo lo demás y no se puede excluir. Se distribuye por MDM/Group Policy, **no por git.** ❌
+
+**Correcciones a la idea inicial (que tenía errores):**
+
+- ❌ *"local: sí se puede hacer commit para compartir con el equipo"* → **Falso.** El scope que se commitea y se comparte es **project**, no **local**. El scope **local** es privado y se guarda fuera del repo.
+- ✅ *"local: solo tú en ese proyecto"* → Correcto, esa es la definición de **local**.
+- ✅ *"compartido entre el equipo: solo de un proyecto específico"* → Correcto, eso es el scope **project**.
+- ⚠️ *"global: no se puede commitear, sirve para todos los proyectos"* → La idea es correcta, pero el nombre actual es **user**. En versiones antiguas de MCP este scope se llamaba "global", y el actual "local" se llamaba "project"; de ahí viene buena parte de la confusión.
+
 ## Scope de Claude md
 
+| Scope | Explicación del alcance | Ruta donde se configura | Comando para configurar | ¿Se puede hacer git commit para compartir con el equipo? |
+|---|---|---|---|---|
+| **Managed policy** (organización) | Instrucciones para toda la organización; se cargan antes que las de usuario y proyecto y no se pueden excluir | macOS: `/Library/Application Support/ClaudeCode/CLAUDE.md`<br>Linux/WSL: `/etc/claude-code/CLAUDE.md`<br>Windows: `C:\Program Files\ClaudeCode\CLAUDE.md` | **No aplica** — es un archivo que despliega IT/DevOps por MDM/Group Policy; no hay comando de Claude Code que lo cree | ❌ No — se distribuye por gestión de dispositivos (MDM/GPO), no por el repo |
+| **User** (usuario) | Tus preferencias personales para **todos** tus proyectos | `~/.claude/CLAUDE.md` | **No aplica** — se edita como archivo a mano; `/memory` solo lo abre, no lo crea | ❌ No — vive en tu home, fuera de cualquier repo |
+| **Project** (proyecto) | Instrucciones del proyecto compartidas con el equipo | `./CLAUDE.md` o `./.claude/CLAUDE.md` | `/init` genera un CLAUDE.md de proyecto inicial (o lo mejora si ya existe) | ✅ Sí — se versiona y se comparte por control de código |
+| **Local** | Preferencias personales solo para este proyecto | `./CLAUDE.local.md` (agrégalo a `.gitignore`) | **No aplica** — archivo manual; al elegir la opción personal de `/init` se crea y se agrega a `.gitignore` | ❌ No — está pensado para `.gitignore`, no se comparte |
+
+> Los `CLAUDE.md` ubicados en subdirectorios por debajo de tu directorio de trabajo **no se cargan al inicio**: se incluyen bajo demanda cuando Claude lee archivos de ese subdirectorio.
+
 ## Scope de Skill vs MCP vs .claude/rules/ vs CLAUDE.md
+
+El scope de **CLAUDE.md** ya quedó cubierto en la tabla anterior. Aquí van las otras tres mecánicas — **Skill**, **MCP** y **.claude/rules/** — cada una con su propia tabla.
+
+### Skill
+
+| Scope | Explicación del alcance | Ruta donde se configura | Comando para configurar | ¿Se puede hacer git commit para compartir con el equipo? |
+|---|---|---|---|---|
+| **Personal** | Disponible en **todos** tus proyectos, solo para ti | `~/.claude/skills/<nombre-skill>/SKILL.md` | **No aplica** — no existe un comando de Claude Code para crear skills; se crea el directorio y el `SKILL.md` manualmente | ❌ No — vive en tu home, fuera del repo |
+| **Project** | Solo en este proyecto; se comparte con el equipo | `<raíz-proyecto>/.claude/skills/<nombre-skill>/SKILL.md` | **No aplica** — se crea el directorio y el `SKILL.md` a mano y luego se versiona | ✅ Sí — se commitea `.claude/skills/` |
+| **Plugin** | Disponible donde el plugin esté habilitado | `<plugin>/skills/<nombre-skill>/SKILL.md` | `/plugin install <nombre>@<marketplace>` | ❌ No por el repo del proyecto — se distribuye vía marketplace/plugin, no commiteando en tu repo |
+
+### MCP
+
+| Scope | Explicación del alcance | Ruta donde se configura | Comando para configurar | ¿Se puede hacer git commit para compartir con el equipo? |
+|---|---|---|---|---|
+| **Local** (por defecto) | Solo en el proyecto actual y privado para ti | `~/.claude.json` (bajo la ruta de ese proyecto) | `claude mcp add --transport http <nombre> <url>` (local es el scope por defecto; equivale a `--scope local`) | ❌ No — se guarda en `~/.claude.json`, fuera del repo |
+| **Project** | Solo en el proyecto actual, compartido con el equipo | `.mcp.json` en la raíz del proyecto | `claude mcp add --transport http --scope project <nombre> <url>` | ✅ Sí — `.mcp.json` está pensado para versionarse |
+| **User** | En **todos** tus proyectos, privado para ti | `~/.claude.json` | `claude mcp add --transport http --scope user <nombre> <url>` | ❌ No — se guarda en tu `~/.claude.json` |
+
+> Aviso de nombres: en versiones antiguas el scope `local` se llamaba `project` y el `user` se llamaba `global`. Además, administradores pueden desplegar MCP a nivel de organización mediante configuración gestionada (enterprise).
+
+### .claude/rules/
+
+Las rules tienen **dos ejes independientes**: *dónde viven* (proyecto vs. usuario) y *cómo se cargan* (CON o SIN `paths:`):
+
+- **SIN `paths:`** → se cargan en cada sesión, con la misma prioridad que `.claude/CLAUDE.md`; aplican a todo el proyecto.
+- **CON `paths:`** → solo se cargan cuando Claude lee o edita archivos que coinciden con el glob de `paths:` (ahorra contexto).
+
+| Scope | Explicación del alcance | Ruta donde se configura | Comando para configurar | ¿Se puede hacer git commit para compartir con el equipo? |
+|---|---|---|---|---|
+| **Proyecto — SIN `paths:`** | Se carga en cada sesión, con la misma prioridad que `.claude/CLAUDE.md`; aplica a todo el proyecto | `<raíz-proyecto>/.claude/rules/*.md` | **No aplica** — son archivos `.md` que creas a mano; no hay comando de Claude Code que los genere | ✅ Sí — se commitea `.claude/rules/` |
+| **Proyecto — CON `paths:`** | Solo se carga cuando Claude lee/edita archivos que coinciden con el glob de `paths:`; reduce el contexto consumido | `<raíz-proyecto>/.claude/rules/*.md` con frontmatter `paths:` | **No aplica** — archivo `.md` con frontmatter `paths:`, creado a mano | ✅ Sí — se versiona igual que cualquier rule de proyecto |
+| **Usuario** | Aplica a **todos** tus proyectos de la máquina; se carga antes que las rules de proyecto (estas tienen prioridad). También admite `paths:` | `~/.claude/rules/*.md` | **No aplica** — archivos `.md` creados a mano | ❌ No — vive en tu home, fuera del repo |
 
 # Comparativa General (**NO** Específica de Context7) de Skill vs MCP vs .claude/rules/ vs CLAUDE.md
 
