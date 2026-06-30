@@ -346,8 +346,16 @@ EJECUTAR la fase delegando en ellos. No vuelvas a evaluar si hace falta un
 subagente: esa decisión ya se tomó en el Paso 4.
 
 # Entrada
-<<<PEGA AQUÍ LA FASE ACTUAL DEL PLAN + LA SEÑAL DE SUBAGENTE QUE DETECTÓ EL PASO 4
-(cuál de las 4 señales aplicó y por qué)>>>
+<<<
+PEGAR AQUI LA SIGUIENTE INFORMACION DE LA FASE N SOBRE LA QUE SE DETECTO QUE ES NECESARIO CEAR SUB AGENTE, eso incluye:
+1. Número de la fase: Fase N
+
+2. Nombre de la fase
+
+3. Contenido completo de la fase N
+
+4. Razón detectada en el Paso N, por el cual es necesario crear subagentes
+>>>
 
 # Qué debes hacer
 1. Según la señal recibida, decide el TIPO de subagente que corresponde (no crees
@@ -452,27 +460,3 @@ Por cada lote: ruta(s) revisada(s), hallazgo en 1–2 líneas y "Lote X/Y
 completado". Al final: la lista mínima de archivos a editar, esperando mi
 confirmación.
 ```
-
----
-
-### Referencias
-
-Prompts construidos sobre el flujo y las buenas prácticas oficiales de Claude Code:
-documentación (`https://code.claude.com/docs`) y blog (`https://claude.com/blog`). En
-concreto: el ciclo *Explorar → Planear → Implementar* y separar exploración de edición
-(*Best practices*); delegar la exploración amplia en **subagentes** para no llenar el
-contexto (*Best practices*, doc de subagentes); las señales oficiales para decidir
-cuándo delegar a un subagente — investigación de 10+ archivos, 3+ tareas
-independientes, necesidad de una segunda opinión sin sesgo, verificación antes de
-cerrar, y pipelines con etapas secuenciales — y las señales de cuándo NO usarlos
-(trabajo secuencial dependiente, ediciones al mismo archivo, tareas pequeñas, o
-exceso de subagentes especializados) (*blog: "How and when to use subagents in
-Claude Code"*); el formato oficial de un subagente como archivo Markdown con
-frontmatter YAML (`name`, `description`, `tools`, `model`) en `.claude/agents/`
-(proyecto) o `~/.claude/agents/` (usuario), y la guía de elegir el modelo más barato
-que cubra la tarea (*doc: "Create custom subagents"*); planes autocontenidos que
-nombran archivos e interfaces, fijan lo que queda fuera de alcance y terminan en una
-verificación de extremo a extremo (*Best practices*); y para repos grandes: acotar
-por subdirectorio, excluir ruido con archivos `.ignore` y reglas `permissions.deny`,
-y el flag `--add-dir` (*guía de repos grandes* y blog). El commit/PR no es
-automático: en la doc es un paso aparte que se pide de forma explícita.
