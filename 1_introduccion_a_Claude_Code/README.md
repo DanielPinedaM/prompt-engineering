@@ -29,7 +29,7 @@
 - **User (antes "global")** — Solo tú, pero en **todos tus proyectos** de la máquina. Vive en tu home (`~/.claude/...` o `~/.claude.json`). **No se comparte por git.**
 - **Managed policy / Organización** — Lo despliega IT/DevOps para toda la organización; se carga antes que todo lo demás y no se puede excluir. Se distribuye por MDM/Group Policy, **no por git.**
 
-## Scope de Claude md
+## Scope de `CLAUDE.md`
 
 | Scope | Explicación del alcance | Ruta donde se configura | Comando para configurar | ¿Se puede hacer git commit para compartir con el equipo? |
 |---|---|---|---|---|
