@@ -40,7 +40,7 @@
 
 > Los `CLAUDE.md` ubicados en subdirectorios por debajo de tu directorio de trabajo **no se cargan al inicio**: se incluyen bajo demanda cuando Claude lee archivos de ese subdirectorio.
 
-## Scope de Skill vs MCP vs .claude/rules/ vs CLAUDE.md
+## Scope de Skill vs MCP vs .claude/rules/ vs `CLAUDE.md`
 
 El scope de **CLAUDE.md** ya quedó cubierto en la tabla anterior. Aquí van las otras tres mecánicas — **Skill**, **MCP** y **.claude/rules/** — cada una con su propia tabla.
 
@@ -79,7 +79,7 @@ Las rules tienen **dos ejes independientes**: *dónde viven* (proyecto vs. usuar
 
 ## Tabla comparativa
 
-| Aspecto | Skill | MCP | .claude/rules/ | CLAUDE.md |
+| Aspecto | Skill | MCP | .claude/rules/ | `CLAUDE.md` |
 |---|---|---|---|---|
 | **¿Cuándo se dispara (ejecuta)?** | Cuando Claude detecta match entre la tarea y la `description` del frontmatter, o se invoca con `/nombre-skill` | Cuando Claude decide llamar una tool del servidor para resolver parte de la tarea | Al inicio de sesión, automáticamente, si el archivo no tiene scoping de ruta; si tiene `paths:`, se activa al leer/editar archivos que coincidan con esa ruta (no en cada tool use) | Al inicio de sesión: el CLAUDE.md de la raíz y de los directorios superiores se carga completo siempre; los CLAUDE.md de subdirectorios se cargan bajo demanda cuando Claude lee archivos de ese subdirectorio |
 | **¿Contra qué hace match para activarse?** | El texto de la `description` del frontmatter vs. el contenido del prompt/tarea actual | No hay "match" semántico — Claude elige la tool por su nombre/descripción cuando la necesita para una acción concreta | La ruta (`paths:`) de los archivos con los que se está trabajando, si está scopeado; si no, no hace match con nada, se carga igual | No hace match — se carga siempre, sin condición |
@@ -89,11 +89,11 @@ Las rules tienen **dos ejes independientes**: *dónde viven* (proyecto vs. usuar
 | **Ejemplo de prompt para activarlo explícitamente** | `"Usa el skill codebase-visualizer para generar el árbol del proyecto"` o directo `/codebase-visualizer` | `"Usa la tool query-docs del MCP de Context7 para traer la doc de Next.js"` | *(No aplica — ver nota abajo)* | *(No aplica — ver nota abajo, pero distinto motivo)* |
 | **¿Consume menos tokens?** | **Sí, el más eficiente de los 4** — solo la metadata (nombre + description) se carga al inicio; el cuerpo y los archivos de soporte (`reference.md`, `examples.md`, `scripts/`) se cargan on-demand y solo lo que se usa | Con Tool Search activo (default), bajo impacto: al inicio solo se cargan los nombres de las tools y las instrucciones del servidor. El costo sube solo si Tool Search se desactiva con `ENABLE_TOOL_SEARCH=false`, o en entornos donde no está disponible por defecto (Vertex AI, un `ANTHROPIC_BASE_URL` no first-party o modelos Haiku, que no soportan `tool_reference`), donde se cargan de entrada las definiciones completas de todas las tools | Costo fijo si no está scopeado por ruta (se carga siempre, igual que CLAUDE.md); si está scopeado, solo carga cuando aplica esa ruta | El más costoso de mantener "liviano" — se carga completo y permanece en contexto toda la sesión, sin excepciones ni progressive disclosure |
 
-## Nota sobre `.claude/rules/` y CLAUDE.md: no tienen "prompt de activación"
+## Nota sobre `.claude/rules/` y `CLAUDE.md`: no tienen "prompt de activación"
 
 A diferencia de Skill y MCP, **no existe un prompt para invocar manualmente `.claude/rules/` o CLAUDE.md**, porque no funcionan por invocación sino por carga automática de contexto:
 
-- **CLAUDE.md**: el de la raíz y el de los directorios superiores al de trabajo se cargan completos al iniciar sesión, sin condición ni "match". Los CLAUDE.md ubicados en subdirectorios son la única excepción: se cargan bajo demanda cuando Claude lee archivos de ese subdirectorio.
+- **`CLAUDE.md`**: el de la raíz y el de los directorios superiores al de trabajo se cargan completos al iniciar sesión, sin condición ni "match". Los CLAUDE.md ubicados en subdirectorios son la única excepción: se cargan bajo demanda cuando Claude lee archivos de ese subdirectorio.
 - **.claude/rules/**: si el archivo no tiene scoping de ruta (`paths:`), se comporta igual que CLAUDE.md (siempre cargado). Si tiene scoping, se activa automáticamente cuando Claude lee o edita un archivo dentro de esa ruta — el "match" es la ruta del archivo en el que estás trabajando, no algo que el usuario solicite con una frase.
 
 Por eso no hay un equivalente a `"usa el skill X"` o `"usa el MCP Y"` para estos dos: no se "llaman", simplemente están o no están en el contexto según dónde estés parado en el proyecto.
@@ -103,7 +103,7 @@ Por eso no hay un equivalente a `"usa el skill X"` o `"usa el MCP Y"` para estos
 - **Skill** → procedimiento activado por relevancia semántica, el más eficiente en tokens por su carga progresiva.
 - **MCP** → conexión a sistemas externos vía tools reales; con Tool Search, el costo de tenerlos conectados bajó mucho respecto a versiones anteriores de Claude Code.
 - **.claude/rules/** → fragmento de contexto de proyecto, automático por ruta si está scopeado, o siempre cargado si no lo está.
-- **CLAUDE.md** → contexto de proyecto sin scoping por ruta; el de la raíz se carga siempre y completo (los de subdirectorios cargan bajo demanda); el de mayor costo fijo de los cuatro.
+- **`CLAUDE.md`** → contexto de proyecto sin scoping por ruta; el de la raíz se carga siempre y completo (los de subdirectorios cargan bajo demanda); el de mayor costo fijo de los cuatro.
 
 # Comparativa Enfocada en Context7 Sobre Skill vs MCP en Claude Code
 
