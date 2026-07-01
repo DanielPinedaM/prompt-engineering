@@ -106,8 +106,8 @@ texto que te entrego, sin cambiar lo que significa.
 - PROHIBIDO eliminar ideas aunque parezcan redundantes: márcalas, no las borres.
 
 # Formato de salida
-Solo la lista de pasos numerados, cada uno con su redacción corregida y, si aplica,
-sus etiquetas al final. Nada más.
+Devuélveme **solo** un Markdowon con la lista de pasos numerados,
+cada uno con su redacción corregida y, si aplica, sus etiquetas al final.
 ```
 
 ---
@@ -117,8 +117,7 @@ sus etiquetas al final. Nada más.
 **Intención:** los problemas ya quedaron marcados en el Paso 1. Aquí **resuelvo** los
 que se pueden decidir **sin mirar el repositorio** (lógica, hechos, contradicciones,
 ambigüedades). Lo que dependa del código NO se adivina: se deja señalado para el
-Paso 3. Por cada problema: **dónde está**, **solución técnica**, **por qué** y **paso
-corregido**. Conserva el **Top 3**.
+Paso 3. Por cada problema: **dónde está**, **solución técnica**, **por qué** y **paso corregido**. Conservar el **Top 3**.
 
 ```text
 # Rol
@@ -159,8 +158,14 @@ Al final, añade:
 - PROHIBIDO proponer features nuevas: las soluciones se refieren solo a lo escrito.
 
 # Formato de salida
-Una entrada por problema (Dónde / Solución / Por qué / Paso corregido), luego la
-lista de supuestos a verificar en código, y al final el Top 3.
+Un Markdowon con lo siguiente:
+1. Una entrada por problema (Dónde / Solución / Por qué / Paso corregido)
+
+2. lista de supuestos a verificar en código
+
+3. Top 3 de mejoras más importantes
+
+4. Rescribir toda la "Entrada" enumerada y corregida, lista para copiar y pegar
 ```
 
 ---
@@ -186,8 +191,10 @@ responsabilidad es explorar el código relevante y producir un PLAN DE EJECUCIÓ
 fases, ya aterrizado en el repositorio real.
 
 # Entrada
-<<<PEGA AQUÍ LOS PASOS YA RESUELTOS + LA LISTA DE SUPUESTOS A VERIFICAR (salida del
-Paso 2)>>>
+<<<PEGA AQUÍ:
+- LOS PASOS YA RESUELTOS
+- LA LISTA DE SUPUESTOS A VERIFICAR (salida del Paso 2)
+>>>
 
 # Cuándo usar un subagente de exploración (importante)
 Un subagente es una instancia paralela que lee en su propio contexto y te devuelve
@@ -347,7 +354,7 @@ subagente: esa decisión ya se tomó en el Paso 4.
 
 # Entrada
 <<<
-PEGAR AQUI LA SIGUIENTE INFORMACION DE LA FASE N SOBRE LA QUE SE DETECTO QUE ES NECESARIO CEAR SUB AGENTE, eso incluye:
+PEGAR AQUI LA SIGUIENTE INFORMACION DE LA FASE N SOBRE LA QUE SE DETECTO QUE ES NECESARIO CEAR SUBAGENTE, eso incluye:
 1. Número de la fase: Fase N
 
 2. Nombre de la fase
